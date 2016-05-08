@@ -1,0 +1,16 @@
+version: '2'
+services:
+
+  executor:
+    container_name: hflow_executor
+    build: executor
+
+  app:
+    container_name: hflow_app
+    depends_on:
+      - redis
+    build: app
+
+  redis:
+    container_name: hflow_redis
+    image: redis:3.0
