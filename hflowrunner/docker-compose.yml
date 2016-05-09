@@ -1,15 +1,27 @@
 version: '2'
 services:
 
-  executor:
-    container_name: hflow_executor
-    build: executor
+#  executor:
+#    container_name: hflow_executor
+#    build: executor
+#
+#  app:
+#    container_name: hflow_app
+#    depends_on:
+#      - redis
+#    build: app
+#
+#  rabbitmq:
+#    container_name: hflow_rabbitmq
+#    image: rabbitmq:3.6
 
-  app:
-    container_name: hflow_app
+  all:
+    container_name: hflow_all
+    build: allinone
     depends_on:
       - redis
-    build: app
+    volumes:
+     - ..:/code
 
   redis:
     container_name: hflow_redis

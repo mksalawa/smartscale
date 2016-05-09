@@ -1,3 +1,3 @@
-amqp_url: amqp://hflow_rabbitmq
+amqp_url: amqp://localhost
 storage: local
 threads: <%= Executor::cpu_count %>
