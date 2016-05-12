@@ -5,7 +5,7 @@ RUN cd /node_modules/hyperflow/ && npm install https://github.com/dice-cyfronet/
 
 RUN ln -s /node_modules/hyperflow/
 
-ENV PATH $PATH:node_modules/hyperflow/bin/
+ENV PATH $PATH:node_modules/hyperflow/bin/:code/hflowrunner/Montage_3.3_patched_4/bin
 ENV REDIS_URL redis://hflow_redis:6379
 
 RUN apt-get update
