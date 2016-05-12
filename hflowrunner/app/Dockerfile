@@ -5,16 +5,14 @@ RUN cd /node_modules/hyperflow/ && npm install https://github.com/dice-cyfronet/
 
 RUN ln -s /node_modules/hyperflow/
 
-RUN apt-get update
-RUN apt-get -y install netcat
-
 ENV PATH $PATH:node_modules/hyperflow/bin/
 ENV REDIS_URL redis://hflow_redis:6379
 ENV AMQP_URL amqp://hflow_rabbitmq:5672
-COPY listen.sh listen.sh
 
 # Montage10k
 ENV WORKDIR /code/smartscale/hflowrunner/data/0.25/input
+ENV METRIC_COLLECTOR <METRIC_COLLECTOR_IP>:9002
+ENV METRIC_COLLECTOR_TYPE visor
 
 # Montage143
 #ENV WORKDIR /workdir

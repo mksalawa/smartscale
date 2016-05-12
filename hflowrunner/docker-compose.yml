@@ -8,8 +8,6 @@ services:
   rabbitmq:
     container_name: hflow_rabbitmq
     image: rabbitmq:3-management
-#    ports:
-#      - "15672:15672"
 
   app:
     container_name: hflow_app
@@ -27,11 +25,3 @@ services:
     build: executor
     volumes:
       - ..:/code/smartscale
-
-#  all:
-#    container_name: hflow_all
-#    build: allinone
-#    depends_on:
-#      - redis
-#    volumes:
-#     - ..:/code
