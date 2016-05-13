@@ -12,7 +12,7 @@ Also, it is expected that you have [Docker Compose](https://docs.docker.com/comp
 
 ## Run
 
-In current directory run:
+In the current directory run:
 
     docker-compose build
     docker-compose up
@@ -25,11 +25,16 @@ should now show 4 running containers:
 
 * hflow_redis - the instance with Redis installed and running,
 * hflow_rabbitmq - the instance with RabbitMQ Broker on port 5672 and 15672 (management),
-* hflow_executor - the instance on which the executor should be run using command: <br />
-
-        hyperflow-amqp-executor executor_config.yml
+* hflow_executor - the instance on which the [hyperflow-amqp-executor](https://github.com/dice-cyfronet/hyperflow-amqp-executor)
+ is run,
 * hflow_app - the instance on which hyperflow is installed in ```/hyperflow``` directory.<br />
-              The workflow should be run here, eg.:
+<br />
+
+To run the workflow:
+1. Switch shell using command:
+
+        docker exec -it hflow_app bash
+2. Run the workflow, eg.:
 
         hflow run hyperflow/examples/Montage143/workflow_decorated.json -s
 

@@ -14,5 +14,4 @@ COPY run-cmd-openmp.sh /workdir/run-cmd-openmp.sh
 COPY make-movie.sh /workdir/make-movie.sh
 RUN chmod +x /workdir/run-cmd-openmp.sh /workdir/make-movie.sh
 
-CMD ping hflow_rabbitmq
-#CMD hyperflow-amqp-executor executor_config.yml
+CMD ping -c 10 hflow_rabbitmq && hyperflow-amqp-executor executor_config.yml
