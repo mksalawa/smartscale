@@ -7,3 +7,6 @@ hflowrunner/data/
 hflowrunner/Montage_v3.3_patched_4/
 
 target/
+build/
+.gradle/
+out/
