@@ -19,46 +19,32 @@ import java.util.Properties;
 public class AppRunner {
 
     private static final Logger logger = LoggerFactory.getLogger(AppRunner.class);
+    private static final String AWS_PROPERTIES_FILE = "aws.properties";
 
     public static void main(String[] args) {
-        Properties props = new Properties();
-        BasicAWSCredentials credentials;
-
-        try (InputStream input = new FileInputStream("aws.properties")) {
-            props.load(input);
-            credentials = new BasicAWSCredentials(props.getProperty("accesskey"), props.getProperty("secretkey"));
-        } catch (FileNotFoundException e) {
-            logger.error("Properties file not found.", e);
-            return;
-        } catch (IOException e) {
-            logger.error("IO error while reading properties file.", e);
+        BasicAWSCredentials credentials = getAWSCredentials();
+        if (credentials == null) {
+            logger.error("Error while getting credentials.");
             return;
         }
 
-        String namespace = "smartscale";
-        String metricName = "ScaleRequest";
         AmazonCloudWatchClient cloudWatch = new AmazonCloudWatchClient(credentials);
-
-        createAlarm(cloudWatch, namespace, metricName);
-
-        AWSCommandEmitter emitter = new AWSCommandEmitter(cloudWatch, namespace, metricName);
+        AWSCommandEmitter emitter = new AWSCommandEmitter(cloudWatch);
 
         emitter.emit(Command.SCALE_UP);
-
-
     }
 
-    private static void createAlarm(AmazonCloudWatchClient cloudWatch, String namespace, String metricName) {
-        PutMetricAlarmRequest alarmRequest = new PutMetricAlarmRequest()
-            .withAlarmName("Scale up requested")
-            .withMetricName(metricName)
-            .withNamespace(namespace)
-            .withEvaluationPeriods(1)
-            .withPeriod(60)
-            .withStatistic(Statistic.Maximum)
-            .withThreshold(1.0)
-            .withComparisonOperator(ComparisonOperator.GreaterThanOrEqualToThreshold);
-
-        cloudWatch.putMetricAlarm(alarmRequest);
+    private static BasicAWSCredentials getAWSCredentials() {
+        try (InputStream input = new FileInputStream(AWS_PROPERTIES_FILE)) {
+            Properties props = new Properties();
+            props.load(input);
+            return new BasicAWSCredentials(props.getProperty("accesskey"), props.getProperty("secretkey"));
+        } catch (FileNotFoundException e) {
+            logger.error("Properties file not found.", e);
+            return null;
+        } catch (IOException e) {
+            logger.error("IO error while reading properties file.", e);
+            return null;
+        }
     }
 }

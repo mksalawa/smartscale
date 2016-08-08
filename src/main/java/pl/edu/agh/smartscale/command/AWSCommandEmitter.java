@@ -1,20 +1,18 @@
 package pl.edu.agh.smartscale.command;
 
 import com.amazonaws.services.cloudwatch.AmazonCloudWatch;
-import com.amazonaws.services.cloudwatch.model.MetricDatum;
-import com.amazonaws.services.cloudwatch.model.PutMetricDataRequest;
+import com.amazonaws.services.cloudwatch.model.*;
 
 
 public class AWSCommandEmitter implements CommandEmitter {
 
     private final AmazonCloudWatch cloudWatch;
-    private final String namespace;
-    private final String metricName;
+    private final String namespace = "smartscale";
+    private final String metricName = "ScaleRequest";
 
-    public AWSCommandEmitter(AmazonCloudWatch cloudWatch, String namespace, String metricName) {
+    public AWSCommandEmitter(AmazonCloudWatch cloudWatch) {
         this.cloudWatch = cloudWatch;
-        this.namespace = namespace;
-        this.metricName = metricName;
+        createAlarm();
     }
 
     @Override
@@ -28,6 +26,20 @@ public class AWSCommandEmitter implements CommandEmitter {
         );
 
         cloudWatch.putMetricData(putMetricDataRequest);
+    }
+
+    private void createAlarm() {
+        PutMetricAlarmRequest alarmRequest = new PutMetricAlarmRequest()
+            .withAlarmName("Scale request")
+            .withMetricName(metricName)
+            .withNamespace(namespace)
+            .withEvaluationPeriods(1)
+            .withPeriod(60)
+            .withStatistic(Statistic.Maximum)
+            .withThreshold(1.0)
+            .withComparisonOperator(ComparisonOperator.GreaterThanOrEqualToThreshold);
+
+        cloudWatch.putMetricAlarm(alarmRequest);
     }
 
 }
