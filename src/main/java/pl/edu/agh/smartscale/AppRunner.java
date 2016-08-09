@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 import pl.edu.agh.smartscale.command.AWSCommandEmitter;
 import pl.edu.agh.smartscale.command.Command;
 import pl.edu.agh.smartscale.metrics.MetricConverter;
-import pl.edu.agh.smartscale.metrics.MetricListener;
+import pl.edu.agh.smartscale.metrics.MetricCollector;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -26,7 +26,7 @@ public class AppRunner {
 
     public static void main(String[] args) {
 
-        Thread metricListener = new Thread(new MetricListener(new MetricConverter()));
+        Thread metricListener = new Thread(new MetricCollector(new MetricConverter()));
         metricListener.start();
 
         BasicAWSCredentials credentials = getAWSCredentials();
