@@ -1,14 +1,15 @@
 package pl.edu.agh.smartscale;
 
+
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.cloudwatch.AmazonCloudWatchClient;
-import com.amazonaws.services.cloudwatch.model.ComparisonOperator;
-import com.amazonaws.services.cloudwatch.model.PutMetricAlarmRequest;
-import com.amazonaws.services.cloudwatch.model.Statistic;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import pl.edu.agh.smartscale.command.AWSCommandEmitter;
 import pl.edu.agh.smartscale.command.Command;
+import pl.edu.agh.smartscale.metrics.MetricConverter;
+import pl.edu.agh.smartscale.metrics.MetricCollector;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -16,12 +17,18 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
+
 public class AppRunner {
 
     private static final Logger logger = LoggerFactory.getLogger(AppRunner.class);
+
     private static final String AWS_PROPERTIES_FILE = "aws.properties";
 
     public static void main(String[] args) {
+
+        Thread metricListener = new Thread(new MetricCollector(new MetricConverter()));
+        metricListener.start();
+
         BasicAWSCredentials credentials = getAWSCredentials();
         if (credentials == null) {
             logger.error("Error while getting credentials.");
