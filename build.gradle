@@ -2,6 +2,7 @@ group 'pl.edu.agh'
 version '1.0-SNAPSHOT'
 
 apply plugin: 'java'
+apply plugin: 'groovy'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -17,6 +18,8 @@ dependencies {
     compile group: 'junit', name: 'junit', version: '4.12'
     compile group: 'org.projectlombok', name: 'lombok', version: '1.16.8'
     compile group: 'com.amazonaws', name: 'aws-java-sdk', version: '1.11.23'
+    compile group: 'org.spockframework', name: 'spock-core', version: '1.1-groovy-2.4-rc-1'
+    compile group: 'joda-time', name: 'joda-time', version: '2.3'
 }
 
 buildscript {
