@@ -5,11 +5,11 @@ import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.cloudwatch.AmazonCloudWatchClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import pl.edu.agh.smartscale.command.AWSCommandEmitter;
 import pl.edu.agh.smartscale.command.Command;
-import pl.edu.agh.smartscale.metrics.MetricConverter;
+import pl.edu.agh.smartscale.events.Topic;
 import pl.edu.agh.smartscale.metrics.MetricCollector;
+import pl.edu.agh.smartscale.metrics.MetricConverter;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -26,7 +26,9 @@ public class AppRunner {
 
     public static void main(String[] args) {
 
-        Thread metricListener = new Thread(new MetricCollector(new MetricConverter()));
+        Topic topic = new Topic();
+        topic.registerListener(event -> logger.info("Hello, I received your MetricObject! How can I help you?"));
+        Thread metricListener = new Thread(new MetricCollector(new MetricConverter(), topic));
         metricListener.start();
 
         BasicAWSCredentials credentials = getAWSCredentials();
