@@ -7,7 +7,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.edu.agh.smartscale.command.AWSCommandEmitter;
 import pl.edu.agh.smartscale.command.Command;
-import pl.edu.agh.smartscale.events.Topic;
 import pl.edu.agh.smartscale.metrics.MetricCollector;
 
 import java.io.FileNotFoundException;
@@ -25,9 +24,7 @@ public class AppRunner {
 
     public static void main(String[] args) {
 
-        Topic topic = new Topic();
-        topic.registerListener(event -> logger.info("event: {}", event));
-        Thread metricListener = new Thread(new MetricCollector(topic));
+        Thread metricListener = new Thread(new MetricCollector(taskStatus -> logger.info("Received: {}", taskStatus)));
         metricListener.start();
 
         Optional<BasicAWSCredentials> credentials = getAWSCredentials();

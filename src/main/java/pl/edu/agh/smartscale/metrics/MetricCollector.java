@@ -3,8 +3,8 @@ package pl.edu.agh.smartscale.metrics;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pl.edu.agh.smartscale.events.Event;
-import pl.edu.agh.smartscale.events.Topic;
+import pl.edu.agh.smartscale.events.MetricsListener;
+import pl.edu.agh.smartscale.events.TaskStatus;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -17,10 +17,10 @@ public class MetricCollector implements Runnable {
 
     private static final Logger logger = LoggerFactory.getLogger(MetricCollector.class);
     private static final int METRIC_COLLECTOR_PORT = 9002;
-    private final Topic topic;
+    private final MetricsListener metricsListener;
 
-    public MetricCollector(Topic topic) {
-        this.topic = topic;
+    public MetricCollector(MetricsListener metricsListener) {
+        this.metricsListener = metricsListener;
     }
 
     @Override
@@ -29,7 +29,7 @@ public class MetricCollector implements Runnable {
             while (true) {
                 Optional<MetricData> data = receiveDataFromMonitoringPlugin(serverSocket);
                 data.ifPresent(d ->
-                    topic.sendEvent(Event.builder()
+                    metricsListener.receive(TaskStatus.builder()
                         .metricData(d)
                         .timestamp(new DateTime())
                         .build())
