@@ -9,12 +9,11 @@ import pl.edu.agh.smartscale.command.AWSCommandEmitter;
 import pl.edu.agh.smartscale.command.Command;
 import pl.edu.agh.smartscale.events.Topic;
 import pl.edu.agh.smartscale.metrics.MetricCollector;
-import pl.edu.agh.smartscale.metrics.MetricConverter;
 
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Optional;
 import java.util.Properties;
 
 
@@ -27,33 +26,33 @@ public class AppRunner {
     public static void main(String[] args) {
 
         Topic topic = new Topic();
-        topic.registerListener(event -> logger.info("Hello, I received your MetricObject! How can I help you?"));
-        Thread metricListener = new Thread(new MetricCollector(new MetricConverter(), topic));
+        topic.registerListener(event -> logger.info("event: {}", event));
+        Thread metricListener = new Thread(new MetricCollector(topic));
         metricListener.start();
 
-        BasicAWSCredentials credentials = getAWSCredentials();
-        if (credentials == null) {
+        Optional<BasicAWSCredentials> credentials = getAWSCredentials();
+        if (!credentials.isPresent()) {
             logger.error("Error while getting credentials.");
             return;
         }
 
-        AmazonCloudWatchClient cloudWatch = new AmazonCloudWatchClient(credentials);
+        AmazonCloudWatchClient cloudWatch = new AmazonCloudWatchClient(credentials.get());
         AWSCommandEmitter emitter = new AWSCommandEmitter(cloudWatch);
 
         emitter.emit(Command.SCALE_UP);
     }
 
-    private static BasicAWSCredentials getAWSCredentials() {
-        try (InputStream input = new FileInputStream(AWS_PROPERTIES_FILE)) {
+    private static Optional<BasicAWSCredentials> getAWSCredentials() {
+        try (InputStream input = ClassLoader.getSystemResourceAsStream(AWS_PROPERTIES_FILE)) {
             Properties props = new Properties();
             props.load(input);
-            return new BasicAWSCredentials(props.getProperty("accesskey"), props.getProperty("secretkey"));
+            return Optional.of(new BasicAWSCredentials(props.getProperty("accesskey"), props.getProperty("secretkey")));
         } catch (FileNotFoundException e) {
             logger.error("Properties file not found.", e);
-            return null;
+            return Optional.empty();
         } catch (IOException e) {
             logger.error("IO error while reading properties file.", e);
-            return null;
+            return Optional.empty();
         }
     }
 }

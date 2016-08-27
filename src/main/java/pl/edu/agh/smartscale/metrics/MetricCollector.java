@@ -6,63 +6,64 @@ import org.slf4j.LoggerFactory;
 import pl.edu.agh.smartscale.events.Event;
 import pl.edu.agh.smartscale.events.Topic;
 
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Optional;
 
 public class MetricCollector implements Runnable {
 
     private static final Logger logger = LoggerFactory.getLogger(MetricCollector.class);
     private static final int METRIC_COLLECTOR_PORT = 9002;
-    private final MetricConverter metricConverter;
     private final Topic topic;
 
-    public MetricCollector(MetricConverter metricConverter, Topic topic) {
-        this.metricConverter = metricConverter;
+    public MetricCollector(Topic topic) {
         this.topic = topic;
     }
 
     @Override
     public void run() {
-
         try (ServerSocket serverSocket = new ServerSocket(METRIC_COLLECTOR_PORT)) {
             while (true) {
-                final String data = receiveDataFromMonitoringPlugin(serverSocket);
-                if (data != null) {
-                    final MetricData metricData = metricConverter.convert(data);
-                    if (isValid(metricData)) {
-                        topic.sendEvent(Event.builder()
-                                .metricData(metricData)
-                                .timestamp(new DateTime())
-                                .build());
-                    }
+                Optional<MetricData> data = receiveDataFromMonitoringPlugin(serverSocket);
+                data.ifPresent(d ->
+                    topic.sendEvent(Event.builder()
+                        .metricData(d)
+                        .timestamp(new DateTime())
+                        .build())
+                );
+                if (!data.isPresent()) {
+                    logger.warn("Data from monitoring plugin not received.");
                 }
             }
         } catch (IOException e) {
-            logger.error("Error while creating server socket.");
+            logger.error("Error while creating server socket.", e);
         }
     }
 
-    private boolean isValid(MetricData metricData) {
-        return isFieldValid(metricData.getTasksLeft()) && isFieldValid(metricData.getOutputsLeft())
-                && isFieldValid(metricData.getTasksProcessed()) && isFieldValid(metricData.getAllTasks())
-                && isFieldValid(metricData.getStage()) && isFieldValid(metricData.getConsumers());
-    }
+    private Optional<MetricData> receiveDataFromMonitoringPlugin(ServerSocket serverSocket) {
+        try (Socket client = serverSocket.accept(); BufferedReader in = new BufferedReader(new InputStreamReader(client.getInputStream()))) {
 
-    private boolean isFieldValid(int dataValue) {
-        return dataValue != -1;
-    }
+            int tasksLeft = Integer.parseInt(in.readLine().split("\\s")[1]);
+            int outputsLeft = Integer.parseInt(in.readLine().split("\\s")[1]);
+            int tasksProcessed = Integer.parseInt(in.readLine().split("\\s")[1]);
+            int allTasks = Integer.parseInt(in.readLine().split("\\s")[1]);
+            int stage = Integer.parseInt(in.readLine().split("\\s")[1]);
+            int consumers = Integer.parseInt(in.readLine().split("\\s")[1]);
 
-    private String receiveDataFromMonitoringPlugin(ServerSocket serverSocket) {
-        try (Socket client = serverSocket.accept(); InputStream in = client.getInputStream()) {
-            byte[] receivedBytes = new byte[1024];
-            //TODO: loop reading data until EOF
-            final int len = in.read(receivedBytes);
-            return new String(receivedBytes, 0,  len);
+            return Optional.of(MetricData.builder()
+                .tasksLeft(tasksLeft)
+                .outputsLeft(outputsLeft)
+                .tasksProcessed(tasksProcessed)
+                .allTasks(allTasks)
+                .stage(stage)
+                .consumers(consumers)
+                .build());
         } catch (IOException e) {
-            logger.error("Error while establishing connection.");
+            logger.error("Error while establishing connection.", e);
         }
-        return null;
+        return Optional.empty();
     }
 }
