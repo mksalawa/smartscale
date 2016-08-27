@@ -7,7 +7,7 @@ import pl.edu.agh.smartscale.metrics.MetricData;
 
 @Value
 @Builder
-public class Event {
+public class TaskStatus {
     MetricData metricData;
     DateTime timestamp;
 }
