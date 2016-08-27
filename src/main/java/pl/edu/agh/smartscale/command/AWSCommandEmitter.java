@@ -15,8 +15,8 @@ public class AWSCommandEmitter implements CommandEmitter {
     private static final Logger logger = LoggerFactory.getLogger(AWSCommandEmitter.class);
 
     private final AmazonCloudWatch cloudWatch;
-    private final String namespace = "smartscale";
-    private final String metricName = "ScaleRequest";
+    public final String namespace = "smartscale";
+    public final String metricName = "ScaleRequest";
 
     public AWSCommandEmitter(AmazonCloudWatch cloudWatch) {
         this.cloudWatch = cloudWatch;
