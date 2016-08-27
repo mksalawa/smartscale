@@ -4,6 +4,10 @@ version '1.0-SNAPSHOT'
 apply plugin: 'java'
 apply plugin: 'groovy'
 
+apply plugin: 'application'
+
+mainClassName = "pl.edu.agh.smartscale.AppRunner"
+
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
