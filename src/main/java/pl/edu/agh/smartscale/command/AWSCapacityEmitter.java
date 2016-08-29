@@ -37,6 +37,7 @@ public class AWSCapacityEmitter implements CommandEmitter {
     }
 
     private void setDesiredCapacity(int capacity) {
+        logger.info("Emitting desired capacity: {}", capacity);
         autoScalingClient.setDesiredCapacity(new SetDesiredCapacityRequest()
             .withAutoScalingGroupName(autoscalingGroupName)
             .withDesiredCapacity(capacity));

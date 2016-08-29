@@ -28,11 +28,14 @@ public class MetricCollector implements Runnable {
         try (ServerSocket serverSocket = new ServerSocket(METRIC_COLLECTOR_PORT)) {
             while (true) {
                 Optional<MetricData> data = receiveDataFromMonitoringPlugin(serverSocket);
-                data.ifPresent(d ->
-                    metricsListener.receive(TaskStatus.builder()
-                        .metricData(d)
-                        .timestamp(new DateTime())
-                        .build())
+                data.ifPresent(d -> {
+                        TaskStatus taskStatus = TaskStatus.builder()
+                            .metricData(d)
+                            .timestamp(DateTime.now())
+                            .build();
+                        logger.info("Collector received data: {} - {}", d, taskStatus.getTimestamp().toString());
+                        metricsListener.receive(taskStatus);
+                    }
                 );
                 if (!data.isPresent()) {
                     logger.warn("Data from monitoring plugin not received.");
