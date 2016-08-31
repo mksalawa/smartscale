@@ -1,0 +1,41 @@
+version: '2'
+services:
+
+  smartscale:
+    container_name: smartscale
+    image: smartscale:latest
+
+  redis:
+    container_name: hflow_redis
+    image: redis:3.0
+
+  rabbitmq:
+    container_name: hflow_rabbitmq
+    image: rabbitmq:3-management
+
+  app:
+    container_name: hflow_app
+    image: hflow_app:latest
+    depends_on:
+      - smartscale
+      - rabbitmq
+      - redis
+    environment:
+      REDIS_URL: redis://hflow_redis:6379
+      AMQP_URL: amqp://hflow_rabbitmq:5672
+      METRIC_COLLECTOR: smartscale:9002
+#    TO RUN SOMETHING OTHER THAN EXAMPLE ADD COMMAND LIKE:
+#    command: bash -c "sleep 4 && hflow run /code/md_amqp2.json -s -p hyperflow-monitoring-plugin"
+#    volumes:
+#      - .:/code
+
+
+  executor:
+    container_name: hflow_executor
+    image: hflow_executor:latest
+    depends_on:
+      - smartscale
+      - rabbitmq
+      - app
+    environment:
+      AMQP_URL: amqp://hflow_rabbitmq:5672
