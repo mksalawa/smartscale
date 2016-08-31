@@ -2,10 +2,10 @@ package pl.edu.agh.smartscale;
 
 
 import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.services.cloudwatch.AmazonCloudWatchClient;
+import com.amazonaws.services.autoscaling.AmazonAutoScalingClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pl.edu.agh.smartscale.command.AWSCommandEmitter;
+import pl.edu.agh.smartscale.command.AWSCapacityEmitter;
 import pl.edu.agh.smartscale.command.Command;
 import pl.edu.agh.smartscale.metrics.MetricCollector;
 
@@ -33,8 +33,7 @@ public class AppRunner {
             return;
         }
 
-        AmazonCloudWatchClient cloudWatch = new AmazonCloudWatchClient(credentials.get());
-        AWSCommandEmitter emitter = new AWSCommandEmitter(cloudWatch);
+        AWSCapacityEmitter emitter = new AWSCapacityEmitter("smartscale", new AmazonAutoScalingClient(credentials.get()));
 
         emitter.emit(Command.SCALE_UP);
     }
