@@ -5,7 +5,7 @@ To create images needed by docker-compose.yml, run:
 ```
 docker build app -t hflow_app:latest
 docker build executor -t hflow_executor:latest
-docker build smartscale -t hflow_smartscale:latest
+docker build smartscale -t smartscale:latest
 ```
 
 Ideally these images will be available on DockerHub.
