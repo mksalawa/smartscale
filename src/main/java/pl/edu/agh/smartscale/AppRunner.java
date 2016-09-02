@@ -8,8 +8,7 @@ import pl.edu.agh.smartscale.command.AWSCapacityEmitter;
 import pl.edu.agh.smartscale.events.MetricsListener;
 import pl.edu.agh.smartscale.metrics.MetricCollector;
 import pl.edu.agh.smartscale.metrics.StrategyBasedListener;
-import pl.edu.agh.smartscale.metrics.TogglingStrategy;
-import pl.edu.agh.smartscale.strategy.ScalingStrategy;
+import pl.edu.agh.smartscale.strategy.TogglingStrategy;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -41,6 +40,7 @@ public class AppRunner {
 
     private static Optional<BasicAWSCredentials> getAWSCredentials() {
         try (InputStream input = ClassLoader.getSystemResourceAsStream(AWS_PROPERTIES_FILE)) {
+            logger.info("Reading credentials from file: {}.", AWS_PROPERTIES_FILE);
             Properties props = new Properties();
             props.load(input);
             return Optional.of(new BasicAWSCredentials(props.getProperty("accesskey"), props.getProperty("secretkey")));

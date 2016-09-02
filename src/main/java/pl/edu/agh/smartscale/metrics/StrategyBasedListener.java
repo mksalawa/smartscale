@@ -1,5 +1,6 @@
 package pl.edu.agh.smartscale.metrics;
 
+import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.edu.agh.smartscale.command.Command;
@@ -10,16 +11,12 @@ import pl.edu.agh.smartscale.strategy.ScalingStrategy;
 
 import java.util.Optional;
 
+@AllArgsConstructor
 public class StrategyBasedListener implements MetricsListener {
     private static final Logger logger = LoggerFactory.getLogger(StrategyBasedListener.class);
 
     private ScalingStrategy scalingStrategy;
     private CommandEmitter emitter;
-
-    public StrategyBasedListener(ScalingStrategy scalingStrategy, CommandEmitter emitter) {
-        this.scalingStrategy = scalingStrategy;
-        this.emitter = emitter;
-    }
 
     @Override
     public void receive(TaskStatus taskStatus) {
