@@ -8,14 +8,14 @@ import com.amazonaws.services.cloudwatch.model.PutMetricDataRequest
 import spock.lang.Specification
 import spock.lang.Unroll
 
-class AWSCommandEmitterTest extends Specification {
+class AWSMetricDataEmitterTest extends Specification {
 
-    AWSCommandEmitter emitter
+    AWSMetricDataEmitter emitter
     AmazonCloudWatch clientMock
 
     def setup() {
         clientMock = Mock(AmazonCloudWatch.class)
-        emitter = new AWSCommandEmitter(clientMock);
+        emitter = new AWSMetricDataEmitter(clientMock);
     }
 
     @Unroll

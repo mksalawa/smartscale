@@ -10,15 +10,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
-public class AWSCommandEmitter implements CommandEmitter {
+public class AWSMetricDataEmitter implements CommandEmitter {
 
-    private static final Logger logger = LoggerFactory.getLogger(AWSCommandEmitter.class);
+    private static final Logger logger = LoggerFactory.getLogger(AWSMetricDataEmitter.class);
 
     private final AmazonCloudWatch cloudWatch;
     public final String namespace = "smartscale";
     public final String metricName = "ScaleRequest";
 
-    public AWSCommandEmitter(AmazonCloudWatch cloudWatch) {
+    public AWSMetricDataEmitter(AmazonCloudWatch cloudWatch) {
         this.cloudWatch = cloudWatch;
         createAlarm();
     }
@@ -46,6 +46,7 @@ public class AWSCommandEmitter implements CommandEmitter {
     }
 
     private PutMetricDataRequest createPutMetricDataRequest(String name, String ns, double value) {
+        logger.info("Sending metric data: {}/{} - {}", ns, name, value);
         return new PutMetricDataRequest()
             .withNamespace(ns)
             .withMetricData(new MetricDatum()
