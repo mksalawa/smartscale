@@ -2,13 +2,16 @@ package pl.edu.agh.smartscale;
 
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.autoscaling.AmazonAutoScalingClient;
+import org.joda.time.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.edu.agh.smartscale.command.AWSCapacityEmitter;
+import pl.edu.agh.smartscale.config.ConfigurationHelper;
+import pl.edu.agh.smartscale.config.ConfigurationHelperImpl;
 import pl.edu.agh.smartscale.events.MetricsListener;
 import pl.edu.agh.smartscale.metrics.MetricCollector;
 import pl.edu.agh.smartscale.metrics.StrategyBasedListener;
-import pl.edu.agh.smartscale.strategy.TogglingStrategy;
+import pl.edu.agh.smartscale.strategy.LinearStrategy;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -32,7 +35,8 @@ public class AppRunner {
 
         AWSCapacityEmitter emitter = new AWSCapacityEmitter("smartscale", new AmazonAutoScalingClient(credentials.get()));
 
-        MetricsListener listener = new StrategyBasedListener(new TogglingStrategy(), emitter);
+        ConfigurationHelper configHelper = new ConfigurationHelperImpl();
+        MetricsListener listener = new StrategyBasedListener(new LinearStrategy(configHelper), emitter);
 
         Thread metricListenerThread = new Thread(new MetricCollector(listener));
         metricListenerThread.start();
