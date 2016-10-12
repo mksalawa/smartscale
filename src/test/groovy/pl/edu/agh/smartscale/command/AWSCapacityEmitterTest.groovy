@@ -28,35 +28,18 @@ class AWSCapacityEmitterTest extends Specification {
                 .withDesiredCapacity(baseCapacity))
     }
 
-    def "should add instance to the scaling group on scale up"() {
+    def "should emit proper capacity on command"() {
         given:
         def request = new SetDesiredCapacityRequest()
                 .withAutoScalingGroupName(autoscalingGroupName)
-                .withDesiredCapacity(baseCapacity + 1)
+                .withDesiredCapacity(baseCapacity)
 
         when:
-        emitter.emit(Command.SCALE_UP)
+        emitter.emit(new SetCapacityCommand(baseCapacity))
 
         then:
         1 * clientMock.describeAutoScalingGroups(autoScalingGroupsRequest) >> resultMock
         1 * resultMock.getAutoScalingGroups() >> this.autoScalingGroups
         1 * clientMock.setDesiredCapacity(request)
     }
-
-    def "should remove instance from the scaling group on scale down"() {
-        given:
-        def request = new SetDesiredCapacityRequest()
-                .withAutoScalingGroupName(autoscalingGroupName)
-                .withDesiredCapacity(baseCapacity - 1)
-
-        when:
-        emitter.emit(Command.SCALE_DOWN)
-
-        then:
-        1 * clientMock.describeAutoScalingGroups(autoScalingGroupsRequest) >> resultMock
-        1 * resultMock.getAutoScalingGroups() >> this.autoScalingGroups
-        1 * clientMock.setDesiredCapacity(request)
-    }
-
-    // TODO: add corner case tests
 }
