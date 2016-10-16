@@ -2,7 +2,7 @@ package pl.edu.agh.smartscale.strategy
 
 import org.joda.time.DateTime
 import pl.edu.agh.smartscale.command.SetCapacityCommand
-import pl.edu.agh.smartscale.config.ConfigurationHelper
+import pl.edu.agh.smartscale.config.NormalTimerImpl
 import pl.edu.agh.smartscale.events.TaskStatus
 import pl.edu.agh.smartscale.metrics.MetricData
 import spock.lang.Specification
@@ -14,9 +14,9 @@ import static org.joda.time.Duration.standardMinutes
 class LinearStrategyTest extends Specification {
 
     final evaluationFrequency = standardMinutes(5)
-    final configHelperMock = Mock(ConfigurationHelper.class)
+    final timer = Mock(NormalTimerImpl.class)
     @Subject
-    final strategy = new LinearStrategy(configHelperMock, evaluationFrequency)
+    final strategy = new LinearStrategy(timer, evaluationFrequency)
     final baseTimestamp = new DateTime(2016, 01, 01, 10, 00, 00)
 
     @Unroll
@@ -34,7 +34,7 @@ class LinearStrategyTest extends Specification {
                 tasksLeft: 4,
                 tasksProcessed: 6,
                 consumers: consumers)
-        configHelperMock.getTimeLeft() >> timeLeft
+        timer.getTimeLeft() >> timeLeft
 
         when:
         final cmdBefore = strategy.process(prevStatus)

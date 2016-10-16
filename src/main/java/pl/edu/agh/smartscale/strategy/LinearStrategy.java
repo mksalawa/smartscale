@@ -7,7 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.edu.agh.smartscale.command.Command;
 import pl.edu.agh.smartscale.command.SetCapacityCommand;
-import pl.edu.agh.smartscale.config.ConfigurationHelper;
+import pl.edu.agh.smartscale.config.Timer;
 import pl.edu.agh.smartscale.events.TaskStatus;
 import pl.edu.agh.smartscale.metrics.MetricData;
 
@@ -19,15 +19,15 @@ public class LinearStrategy implements ScalingStrategy {
 
     private Duration EVALUATION_FREQUENCY;
     private Optional<TaskStatus> previousHistoricalStatus = Optional.empty();
-    private ConfigurationHelper configHelper;
+    private Timer timer;
 
-    public LinearStrategy(ConfigurationHelper configHelper, Duration evaluationFrequency) {
-        this.configHelper = configHelper;
+    public LinearStrategy(Timer timer, Duration evaluationFrequency) {
+        this.timer = timer;
         this.EVALUATION_FREQUENCY = evaluationFrequency;
     }
 
-    public LinearStrategy(ConfigurationHelper configHelper) {
-        this(configHelper, Duration.standardMinutes(5));
+    public LinearStrategy(Timer timer) {
+        this(timer, Duration.standardMinutes(5));
     }
 
     @Override
@@ -67,7 +67,7 @@ public class LinearStrategy implements ScalingStrategy {
         double currentSpeed = tasksProcessedDelta / (double) timeDelta.getMinutes();
 
         // desired speed to finish all tasks in time left
-        Minutes timeLeft = configHelper.getTimeLeft().toStandardMinutes();
+        Minutes timeLeft = timer.getTimeLeft().toStandardMinutes();
         double desiredSpeed = currentMetricData.getTasksLeft() / (double) timeLeft.getMinutes();
 
         int desiredConsumers = (int) Math.ceil(currentConsumers * desiredSpeed / currentSpeed);
