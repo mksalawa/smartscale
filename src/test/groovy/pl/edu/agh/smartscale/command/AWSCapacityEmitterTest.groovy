@@ -30,6 +30,22 @@ class AWSCapacityEmitterTest extends Specification {
 
     def "should emit proper capacity on command"() {
         given:
+        def newCapacity = baseCapacity + 1
+        def request = new SetDesiredCapacityRequest()
+                .withAutoScalingGroupName(autoscalingGroupName)
+                .withDesiredCapacity(newCapacity)
+
+        when:
+        emitter.emit(new SetCapacityCommand(newCapacity))
+
+        then:
+        1 * clientMock.describeAutoScalingGroups(autoScalingGroupsRequest) >> resultMock
+        1 * resultMock.getAutoScalingGroups() >> this.autoScalingGroups
+        1 * clientMock.setDesiredCapacity(request)
+    }
+
+    def "should not emit desired capacity if same as actual"() {
+        given:
         def request = new SetDesiredCapacityRequest()
                 .withAutoScalingGroupName(autoscalingGroupName)
                 .withDesiredCapacity(baseCapacity)
@@ -40,6 +56,6 @@ class AWSCapacityEmitterTest extends Specification {
         then:
         1 * clientMock.describeAutoScalingGroups(autoScalingGroupsRequest) >> resultMock
         1 * resultMock.getAutoScalingGroups() >> this.autoScalingGroups
-        1 * clientMock.setDesiredCapacity(request)
+        0 * clientMock.setDesiredCapacity(request)
     }
 }
