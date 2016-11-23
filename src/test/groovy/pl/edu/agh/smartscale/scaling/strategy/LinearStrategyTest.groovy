@@ -1,9 +1,9 @@
-package pl.edu.agh.smartscale.strategy
+package pl.edu.agh.smartscale.scaling.strategy
 
 import org.joda.time.DateTime
 import pl.edu.agh.smartscale.command.SetCapacityCommand
 import pl.edu.agh.smartscale.config.NormalTimerImpl
-import pl.edu.agh.smartscale.events.TaskStatus
+import pl.edu.agh.smartscale.scaling.TaskStatus
 import pl.edu.agh.smartscale.metrics.MetricData
 import spock.lang.Specification
 import spock.lang.Subject

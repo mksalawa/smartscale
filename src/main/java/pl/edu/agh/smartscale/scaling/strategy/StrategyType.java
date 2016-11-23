@@ -1,4 +1,4 @@
-package pl.edu.agh.smartscale.strategy;
+package pl.edu.agh.smartscale.scaling.strategy;
 
 public enum StrategyType {
     LINEAR("LINEAR");
