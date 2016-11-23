@@ -1,4 +1,4 @@
-package pl.edu.agh.smartscale.events;
+package pl.edu.agh.smartscale.scaling;
 
 import lombok.Builder;
 import lombok.Value;

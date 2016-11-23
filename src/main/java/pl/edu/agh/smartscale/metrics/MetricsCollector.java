@@ -3,8 +3,8 @@ package pl.edu.agh.smartscale.metrics;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pl.edu.agh.smartscale.events.MetricsListener;
-import pl.edu.agh.smartscale.events.TaskStatus;
+import pl.edu.agh.smartscale.scaling.StatusListener;
+import pl.edu.agh.smartscale.scaling.TaskStatus;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -13,14 +13,14 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Optional;
 
-public class MetricCollector implements Runnable {
+public class MetricsCollector implements Runnable {
 
-    private static final Logger logger = LoggerFactory.getLogger(MetricCollector.class);
+    private static final Logger logger = LoggerFactory.getLogger(MetricsCollector.class);
     private static final int METRIC_COLLECTOR_PORT = 9002;
-    private final MetricsListener metricsListener;
+    private final StatusListener statusListener;
 
-    public MetricCollector(MetricsListener metricsListener) {
-        this.metricsListener = metricsListener;
+    public MetricsCollector(StatusListener statusListener) {
+        this.statusListener = statusListener;
     }
 
     @Override
@@ -34,7 +34,7 @@ public class MetricCollector implements Runnable {
                             .timestamp(DateTime.now())
                             .build();
                         logger.info("Collector received data: {} - {}", d, taskStatus.getTimestamp().toString());
-                        metricsListener.receive(taskStatus);
+                        statusListener.receive(taskStatus);
                     }
                 );
                 if (!data.isPresent()) {

@@ -1,4 +1,4 @@
-package pl.edu.agh.smartscale.strategy;
+package pl.edu.agh.smartscale.scaling.strategy;
 
 import org.joda.time.Duration;
 import org.joda.time.Minutes;
@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 import pl.edu.agh.smartscale.command.Command;
 import pl.edu.agh.smartscale.command.SetCapacityCommand;
 import pl.edu.agh.smartscale.config.Timer;
-import pl.edu.agh.smartscale.events.TaskStatus;
+import pl.edu.agh.smartscale.scaling.TaskStatus;
 import pl.edu.agh.smartscale.metrics.MetricData;
 
 import java.util.Optional;

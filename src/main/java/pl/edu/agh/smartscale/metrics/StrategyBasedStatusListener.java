@@ -5,15 +5,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.edu.agh.smartscale.command.Command;
 import pl.edu.agh.smartscale.command.CommandEmitter;
-import pl.edu.agh.smartscale.events.MetricsListener;
-import pl.edu.agh.smartscale.events.TaskStatus;
-import pl.edu.agh.smartscale.strategy.ScalingStrategy;
+import pl.edu.agh.smartscale.scaling.StatusListener;
+import pl.edu.agh.smartscale.scaling.TaskStatus;
+import pl.edu.agh.smartscale.scaling.strategy.ScalingStrategy;
 
 import java.util.Optional;
 
 @AllArgsConstructor
-public class StrategyBasedListener implements MetricsListener {
-    private static final Logger logger = LoggerFactory.getLogger(StrategyBasedListener.class);
+public class StrategyBasedStatusListener implements StatusListener {
+    private static final Logger logger = LoggerFactory.getLogger(StrategyBasedStatusListener.class);
 
     private ScalingStrategy scalingStrategy;
     private CommandEmitter emitter;

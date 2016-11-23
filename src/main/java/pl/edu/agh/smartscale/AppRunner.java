@@ -11,13 +11,13 @@ import pl.edu.agh.smartscale.config.Config;
 import pl.edu.agh.smartscale.config.ConfigReader;
 import pl.edu.agh.smartscale.config.NormalTimerImpl;
 import pl.edu.agh.smartscale.config.ParametersNotFoundException;
-import pl.edu.agh.smartscale.events.MetricsListener;
-import pl.edu.agh.smartscale.metrics.MetricCollector;
-import pl.edu.agh.smartscale.metrics.StrategyBasedListener;
-import pl.edu.agh.smartscale.strategy.LinearStrategy;
-import pl.edu.agh.smartscale.strategy.ScalingStrategy;
-import pl.edu.agh.smartscale.strategy.StrategyNotFoundException;
-import pl.edu.agh.smartscale.strategy.StrategyType;
+import pl.edu.agh.smartscale.scaling.StatusListener;
+import pl.edu.agh.smartscale.metrics.MetricsCollector;
+import pl.edu.agh.smartscale.metrics.StrategyBasedStatusListener;
+import pl.edu.agh.smartscale.scaling.strategy.LinearStrategy;
+import pl.edu.agh.smartscale.scaling.strategy.ScalingStrategy;
+import pl.edu.agh.smartscale.scaling.strategy.StrategyNotFoundException;
+import pl.edu.agh.smartscale.scaling.strategy.StrategyType;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -48,16 +48,16 @@ public class AppRunner {
             logger.error(e.getMessage());
             return;
         }
-        MetricsListener listener;
+        StatusListener listener;
         try {
-            listener = new StrategyBasedListener(createAppropriateStrategy(config.getStrategyType(), config.getTimeLeft()), emitter);
+            listener = new StrategyBasedStatusListener(createAppropriateStrategy(config.getStrategyType(), config.getTimeLeft()), emitter);
         } catch (StrategyNotFoundException e) {
             logger.error(e.getMessage());
             return;
         }
 
-        Thread metricListenerThread = new Thread(new MetricCollector(listener));
-        metricListenerThread.start();
+        Thread metricCollectorThread = new Thread(new MetricsCollector(listener));
+        metricCollectorThread.start();
     }
 
     private static ScalingStrategy createAppropriateStrategy(StrategyType strategyType, Duration timeLeft) throws StrategyNotFoundException {
