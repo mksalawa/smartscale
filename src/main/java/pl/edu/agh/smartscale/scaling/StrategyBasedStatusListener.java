@@ -1,12 +1,10 @@
-package pl.edu.agh.smartscale.metrics;
+package pl.edu.agh.smartscale.scaling;
 
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.edu.agh.smartscale.command.Command;
 import pl.edu.agh.smartscale.command.CommandEmitter;
-import pl.edu.agh.smartscale.scaling.StatusListener;
-import pl.edu.agh.smartscale.scaling.TaskStatus;
 import pl.edu.agh.smartscale.scaling.strategy.ScalingStrategy;
 
 import java.util.Optional;

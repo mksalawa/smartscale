@@ -13,7 +13,7 @@ import pl.edu.agh.smartscale.config.NormalTimerImpl;
 import pl.edu.agh.smartscale.config.ParametersNotFoundException;
 import pl.edu.agh.smartscale.scaling.StatusListener;
 import pl.edu.agh.smartscale.metrics.MetricsCollector;
-import pl.edu.agh.smartscale.metrics.StrategyBasedStatusListener;
+import pl.edu.agh.smartscale.scaling.StrategyBasedStatusListener;
 import pl.edu.agh.smartscale.scaling.strategy.LinearStrategy;
 import pl.edu.agh.smartscale.scaling.strategy.ScalingStrategy;
 import pl.edu.agh.smartscale.scaling.strategy.StrategyNotFoundException;
