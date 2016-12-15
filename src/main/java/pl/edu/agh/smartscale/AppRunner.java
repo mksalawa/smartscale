@@ -40,7 +40,6 @@ public class AppRunner {
             return;
         }
 
-        AWSCapacityEmitter emitter = new AWSCapacityEmitter("smartscale", new AmazonAutoScalingClient(credentials.get()));
         Config config;
         try {
             config = ConfigReader.readProperties(CONFIG_PROPERTIES_FILE);
@@ -48,6 +47,7 @@ public class AppRunner {
             logger.error(e.getMessage());
             return;
         }
+        AWSCapacityEmitter emitter = new AWSCapacityEmitter(config.getGroupName(), new AmazonAutoScalingClient(credentials.get()));
         StatusListener listener;
         try {
             listener = new StrategyBasedStatusListener(createAppropriateStrategy(config.getStrategyType(), config.getTimeLeft()), emitter);
