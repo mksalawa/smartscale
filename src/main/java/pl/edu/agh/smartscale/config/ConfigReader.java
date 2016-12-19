@@ -21,8 +21,9 @@ public class ConfigReader {
         logger.info("Reading credentials from environment variables.");
         String time = System.getenv("TIME");
         String strategy = System.getenv("STRATEGY");
-        if (time != null && strategy != null) {
-            return new Config(getTimeLeft(time), getStrategyType(strategy));
+        String groupName = System.getenv("GROUP_NAME");
+        if (time != null && strategy != null && groupName != null) {
+            return new Config(parseTimeLeft(time), getStrategyType(strategy), groupName);
         }
         try (InputStream input = ClassLoader.getSystemResourceAsStream(configFileName)) {
             logger.info("Reading properties from file: {}.", configFileName);
@@ -30,8 +31,9 @@ public class ConfigReader {
             props.load(input);
             time = props.getProperty("time");
             strategy = props.getProperty("strategy");
-            if (time != null && strategy != null) {
-                return new Config(getTimeLeft(time), getStrategyType(strategy));
+            groupName = props.getProperty("groupname");
+            if (time != null && strategy != null && groupName != null) {
+                return new Config(parseTimeLeft(time), getStrategyType(strategy), groupName);
             }
         } catch (FileNotFoundException e) {
             logger.error("Properties file not found.", e);
@@ -42,10 +44,10 @@ public class ConfigReader {
     }
 
     private static StrategyType getStrategyType(String strategy) {
-        return strategiesMap.get(strategy);
+        return strategiesMap.get(strategy.toUpperCase());
     }
 
-    private static Duration getTimeLeft(String time) {
+    private static Duration parseTimeLeft(String time) {
         PeriodFormatter formatter = new PeriodFormatterBuilder()
                 .appendHours()
                 .appendLiteral(":")

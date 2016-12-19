@@ -8,4 +8,5 @@ import pl.edu.agh.smartscale.scaling.strategy.StrategyType;
 public class Config {
     Duration timeLeft;
     StrategyType strategyType;
+    String groupName;
 }
