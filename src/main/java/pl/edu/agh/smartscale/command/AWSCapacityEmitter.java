@@ -24,9 +24,13 @@ public class AWSCapacityEmitter implements CommandEmitter {
         AutoScalingGroup autoScalingGroup = autoScalingClient.describeAutoScalingGroups(groupsRequest).getAutoScalingGroups().get(0);
 
         int capacity = autoScalingGroup.getDesiredCapacity();
-
-        setDesiredCapacity(command.getDesiredConsumers());
-        logger.info("Emitted desired capacity: {}", capacity);
+        int desiredCapacity = command.getDesiredConsumers();
+        if (desiredCapacity != capacity) {
+            setDesiredCapacity(desiredCapacity);
+            logger.info("Emitted desired capacity: {}", desiredCapacity);
+        } else {
+            logger.info("Skipping emitting current capacity: {}", desiredCapacity);
+        }
     }
 
     private void setDesiredCapacity(int capacity) {
