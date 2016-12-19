@@ -8,8 +8,8 @@ import org.slf4j.LoggerFactory;
 import pl.edu.agh.smartscale.command.Command;
 import pl.edu.agh.smartscale.command.SetCapacityCommand;
 import pl.edu.agh.smartscale.config.Timer;
-import pl.edu.agh.smartscale.scaling.TaskStatus;
 import pl.edu.agh.smartscale.metrics.MetricData;
+import pl.edu.agh.smartscale.scaling.TaskStatus;
 
 import java.util.Optional;
 
@@ -17,17 +17,19 @@ public class LinearStrategy implements ScalingStrategy {
 
     private static final Logger logger = LoggerFactory.getLogger(LinearStrategy.class);
 
-    private Duration EVALUATION_FREQUENCY;
+    private int maxInstances;
+    private Duration EVALUATION_FREQUENCY = Duration.standardMinutes(5);
     private Optional<TaskStatus> previousHistoricalStatus = Optional.empty();
     private Timer timer;
 
-    public LinearStrategy(Timer timer, Duration evaluationFrequency) {
-        this.timer = timer;
+    public LinearStrategy(Timer timer, int maxInstances, Duration evaluationFrequency) {
+        this(timer, maxInstances);
         this.EVALUATION_FREQUENCY = evaluationFrequency;
     }
 
-    public LinearStrategy(Timer timer) {
-        this(timer, Duration.standardMinutes(5));
+    public LinearStrategy(Timer timer, int maxInstances) {
+        this.timer = timer;
+        this.maxInstances = maxInstances;
     }
 
     @Override

@@ -3,7 +3,6 @@ package pl.edu.agh.smartscale;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.autoscaling.AmazonAutoScalingClient;
 import org.joda.time.DateTime;
-import org.joda.time.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.edu.agh.smartscale.command.AWSCapacityEmitter;
@@ -44,13 +43,15 @@ public class AppRunner {
         try {
             config = ConfigReader.readProperties(CONFIG_PROPERTIES_FILE);
         } catch (ParametersNotFoundException e) {
-            logger.error(e.getMessage());
+            logger.error("Configuration parameters not found.", e);
             return;
         }
-        AWSCapacityEmitter emitter = new AWSCapacityEmitter(config.getGroupName(), new AmazonAutoScalingClient(credentials.get()));
+        AWSCapacityEmitter emitter =
+            new AWSCapacityEmitter(config.getGroupName(), new AmazonAutoScalingClient(credentials.get()));
+        emitter.emitMaxInstances(config.getMaxInstances());
         StatusListener listener;
         try {
-            listener = new StrategyBasedStatusListener(createAppropriateStrategy(config.getStrategyType(), config.getTimeLeft()), emitter);
+            listener = new StrategyBasedStatusListener(createAppropriateStrategy(config), emitter);
         } catch (StrategyNotFoundException e) {
             logger.error(e.getMessage());
             return;
@@ -60,10 +61,12 @@ public class AppRunner {
         metricCollectorThread.start();
     }
 
-    private static ScalingStrategy createAppropriateStrategy(StrategyType strategyType, Duration timeLeft) throws StrategyNotFoundException {
-        if (strategyType == StrategyType.LINEAR) {
+    private static ScalingStrategy createAppropriateStrategy(Config config) throws StrategyNotFoundException {
+        if (config.getStrategyType() == StrategyType.LINEAR) {
             DateTime startDate = DateTime.now();
-            return new LinearStrategy(new NormalTimerImpl(startDate, startDate.plusMinutes(timeLeft.toStandardMinutes().getMinutes())));
+            NormalTimerImpl timer = new NormalTimerImpl(startDate,
+                startDate.plusMinutes(config.getTimeLeft().toStandardMinutes().getMinutes()));
+            return new LinearStrategy(timer, config.getMaxInstances());
         } else {
             throw new StrategyNotFoundException("Strategy not found.");
         }
@@ -71,8 +74,8 @@ public class AppRunner {
 
     private static Optional<BasicAWSCredentials> getAWSCredentials() {
         logger.info("Reading credentials from environment variables.");
-        String accesskey = System.getenv("AWS_ACCESSKEY");
-        String secretkey = System.getenv("AWS_SECRETKEY");
+        String accesskey = System.getenv("AWS_ACCESS_KEY_ID");
+        String secretkey = System.getenv("AWS_SECRET_ACCESS_KEY");
         if (accesskey != null && secretkey != null) {
             return Optional.of(new BasicAWSCredentials(accesskey, secretkey));
         }
@@ -80,7 +83,8 @@ public class AppRunner {
             logger.info("Reading credentials from file: {}.", AWS_PROPERTIES_FILE);
             Properties props = new Properties();
             props.load(input);
-            return Optional.of(new BasicAWSCredentials(props.getProperty("accesskey"), props.getProperty("secretkey")));
+            return Optional.of(new BasicAWSCredentials(props.getProperty("AWS_ACCESS_KEY_ID"),
+                props.getProperty("AWS_SECRET_ACCESS_KEY")));
         } catch (FileNotFoundException e) {
             logger.error("Properties file not found.", e);
         } catch (Exception e) {

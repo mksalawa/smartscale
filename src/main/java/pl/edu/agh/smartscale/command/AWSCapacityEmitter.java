@@ -4,6 +4,7 @@ import com.amazonaws.services.autoscaling.AmazonAutoScalingClient;
 import com.amazonaws.services.autoscaling.model.AutoScalingGroup;
 import com.amazonaws.services.autoscaling.model.DescribeAutoScalingGroupsRequest;
 import com.amazonaws.services.autoscaling.model.SetDesiredCapacityRequest;
+import com.amazonaws.services.autoscaling.model.UpdateAutoScalingGroupRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,4 +41,10 @@ public class AWSCapacityEmitter implements CommandEmitter {
             .withDesiredCapacity(capacity));
     }
 
+    public void emitMaxInstances(int maxInstances) {
+        logger.info("Emitting max number of instances: {}", maxInstances);
+        autoScalingClient.updateAutoScalingGroup(new UpdateAutoScalingGroupRequest()
+            .withAutoScalingGroupName(autoscalingGroupName)
+            .withMaxSize(maxInstances));
+    }
 }

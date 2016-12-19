@@ -16,7 +16,7 @@ class LinearStrategyTest extends Specification {
     final evaluationFrequency = standardMinutes(5)
     final timer = Mock(NormalTimerImpl.class)
     @Subject
-    final strategy = new LinearStrategy(timer, evaluationFrequency)
+    final strategy = new LinearStrategy(timer, 10, evaluationFrequency)
     final baseTimestamp = new DateTime(2016, 01, 01, 10, 00, 00)
 
     @Unroll

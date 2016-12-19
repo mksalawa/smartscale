@@ -18,22 +18,24 @@ public class ConfigReader {
     private static final ImmutableMap<String, StrategyType> strategiesMap = ImmutableMap.of("LINEAR", StrategyType.LINEAR);
 
     public static Config readProperties(String configFileName) throws ParametersNotFoundException {
-        logger.info("Reading credentials from environment variables.");
+        logger.info("Reading properties from environment variables.");
         String time = System.getenv("TIME");
         String strategy = System.getenv("STRATEGY");
         String groupName = System.getenv("GROUP_NAME");
-        if (time != null && strategy != null && groupName != null) {
-            return new Config(parseTimeLeft(time), getStrategyType(strategy), groupName);
+        String maxInstances = System.getenv("MAX_INSTANCES");
+        if (time != null && strategy != null && groupName != null && maxInstances != null) {
+            return new Config(parseTimeLeft(time), getStrategyType(strategy), groupName, Integer.valueOf(maxInstances));
         }
         try (InputStream input = ClassLoader.getSystemResourceAsStream(configFileName)) {
             logger.info("Reading properties from file: {}.", configFileName);
             Properties props = new Properties();
             props.load(input);
-            time = props.getProperty("time");
-            strategy = props.getProperty("strategy");
-            groupName = props.getProperty("groupname");
+            time = props.getProperty("TIME");
+            strategy = props.getProperty("STRATEGY");
+            groupName = props.getProperty("GROUP_NAME");
+            maxInstances = props.getProperty("MAX_INSTANCES");
             if (time != null && strategy != null && groupName != null) {
-                return new Config(parseTimeLeft(time), getStrategyType(strategy), groupName);
+                return new Config(parseTimeLeft(time), getStrategyType(strategy), groupName, Integer.valueOf(maxInstances));
             }
         } catch (FileNotFoundException e) {
             logger.error("Properties file not found.", e);
