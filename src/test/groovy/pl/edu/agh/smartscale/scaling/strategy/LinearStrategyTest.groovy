@@ -61,15 +61,49 @@ class LinearStrategyTest extends Specification {
         standardMinutes(15) || 2         || Optional.of(new SetCapacityCommand(3))
     }
 
+    @Unroll
+    def "should return #command (max limit) when unable to finish on time (needing 20 min, having #timeLeft.standardMinutes min, consumers: #consumers)"() {
+        given:
+        final prevStatus = taskStatus(
+                timestamp: baseTimestamp,
+                allTasks: 10,
+                tasksLeft: 5,
+                tasksProcessed: 5,
+                consumers: consumers)
+        final currentStatus = taskStatus(
+                timestamp: (baseTimestamp + evaluationFrequency).plusSeconds(1),
+                allTasks: 10,
+                tasksLeft: 4,
+                tasksProcessed: 6,
+                consumers: consumers)
+        timer.getTimeLeft() >> timeLeft
+        def strategyWithLowMax = new LinearStrategy(timer, max, evaluationFrequency)
+
+        when:
+        final cmdBefore = strategyWithLowMax.process(prevStatus)
+        final cmdAfter = strategyWithLowMax.process(currentStatus)
+
+        then:
+        cmdBefore == Optional.empty()
+        cmdAfter == command
+
+        where:
+        // expected needed time: 20min
+        timeLeft            || consumers || max || command
+        standardMinutes(5)  || 2         || 5   || Optional.of(new SetCapacityCommand(max))   // needs: 8, exceeded
+        standardMinutes(5)  || 3         || 5   || Optional.of(new SetCapacityCommand(max))   // needs: 13, exceeded
+        standardMinutes(5)  || 5         || 5   || Optional.empty()   // needs: 20, exceeded, already max
+    }
+
     private static TaskStatus taskStatus(Map args) {
         return TaskStatus.builder()
                 .timestamp(args.timestamp as DateTime)
                 .metricData(MetricData.builder()
-                    .allTasks(args.allTasks as Integer)
-                    .tasksLeft(args.tasksLeft as Integer)
-                    .tasksProcessed(args.tasksProcessed as Integer)
-                    .consumers(args.consumers as Integer)
-                    .build())
+                .allTasks(args.allTasks as Integer)
+                .tasksLeft(args.tasksLeft as Integer)
+                .tasksProcessed(args.tasksProcessed as Integer)
+                .consumers(args.consumers as Integer)
+                .build())
                 .build()
     }
 }

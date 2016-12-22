@@ -75,6 +75,10 @@ public class LinearStrategy implements ScalingStrategy {
         int desiredConsumers = (int) Math.ceil(currentConsumers * desiredSpeed / currentSpeed);
 
         logger.info("Current consumers: {}, Desired consumers: {}", currentConsumers, desiredConsumers);
+        if (desiredConsumers > maxInstances) {
+            logger.warn("Desired number of consumers ({}) exceeding max limit ({}). Changing desired number of consumers to max limit.", desiredConsumers, maxInstances);
+            desiredConsumers = maxInstances;
+        }
         if (desiredConsumers != currentConsumers) {
             return Optional.of(new SetCapacityCommand(desiredConsumers));
         }
