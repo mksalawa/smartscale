@@ -1,9 +1,19 @@
+
 version: '2'
 services:
 
   smartscale:
     container_name: smartscale
     image: marg/smartscale:latest
+    ports:
+     - "9002:9002"
+    environment:
+      AWS_ACCESS_KEY_ID: <ACCESS_KEY>
+      AWS_SECRET_ACCESS_KEY: <SECRET_KEY>
+      TIME: 01:15
+      STRATEGY: LINEAR
+      GROUP_NAME: smartscale
+      MAX_INSTANCES: 10
 
   redis:
     container_name: hflow_redis
@@ -12,10 +22,14 @@ services:
   rabbitmq:
     container_name: hflow_rabbitmq
     image: rabbitmq:3-management
+    ports:
+     - "5672:5672"
+     - "15672:15672"
 
   app:
     container_name: hflow_app
     image: marg/hflow_app:latest
+    command: bash -c "sleep 5 && hflow run hyperflow/examples/Montage143/workflow_decorated.json -p hyperflow-monitoring-plugin"
     depends_on:
       - smartscale
       - rabbitmq
@@ -24,17 +38,5 @@ services:
       REDIS_URL: redis://hflow_redis:6379
       AMQP_URL: amqp://hflow_rabbitmq:5672
       METRIC_COLLECTOR: smartscale:9002
-#    TO RUN SOMETHING OTHER THAN EXAMPLE ADD COMMAND LIKE:
-#    command: bash -c "sleep 4 && hflow run /code/md_amqp2.json -s -p hyperflow-monitoring-plugin"
-#    volumes:
-#      - .:/code
 
-#  executor:
-#    container_name: hflow_executor
-#    image: hflow_executor:latest
-#    depends_on:
-#      - smartscale
-#      - rabbitmq
-#      - app
-#    environment:
-#      AMQP_URL: amqp://hflow_rabbitmq:5672
+

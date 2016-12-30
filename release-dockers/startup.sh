@@ -4,8 +4,8 @@ yum update -y
 yum install -y docker
 service docker start
 usermod -a -G docker ec2-user
-curl -L https://github.com/docker/compose/releases/download/1.8.0/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose
-chmod +x /usr/local/bin/docker-compose
+curl -L https://github.com/docker/compose/releases/download/1.9.0/docker-compose-`uname -s`-`uname -m` > /usr/bin/docker-compose
+chmod +x /usr/bin/docker-compose
 
 echo "
 version: '2'
@@ -16,6 +16,13 @@ services:
     image: marg/smartscale:latest
     ports:
      - \"9002:9002\"
+    environment:
+      AWS_ACCESS_KEY_ID: <ACCESS_KEY>
+      AWS_SECRET_ACCESS_KEY: <SECRET_KEY>
+      TIME: 01:15
+      STRATEGY: LINEAR
+      GROUP_NAME: smartscale
+      MAX_INSTANCES: 10
 
   redis:
     container_name: hflow_redis
@@ -31,6 +38,7 @@ services:
   app:
     container_name: hflow_app
     image: marg/hflow_app:latest
+    command: bash -c \"sleep 5 && hflow run hyperflow/examples/Montage143/workflow_decorated.json -p hyperflow-monitoring-plugin\"
     depends_on:
       - smartscale
       - rabbitmq
