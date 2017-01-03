@@ -38,15 +38,19 @@ services:
   app:
     container_name: hflow_app
     image: marg/hflow_app:latest
-    command: bash -c \"sleep 5 && hflow run hyperflow/examples/Montage143/workflow_decorated.json -p hyperflow-monitoring-plugin\"
     depends_on:
       - smartscale
       - rabbitmq
       - redis
+    command: bash -c \"sleep 5 && hflow run hyperflow/examples/MolecularDynamicsParameterStudy/workflow.json -p hyperflow-monitoring-plugin\"
     environment:
       REDIS_URL: redis://hflow_redis:6379
       AMQP_URL: amqp://hflow_rabbitmq:5672
       METRIC_COLLECTOR: smartscale:9002
+      METRIC_COLLECTOR_TYPE: visor
+
+      WORKDIR: /smartscale/examples/MolecularDynamicsParameterStudy
+      LD_LIBRARY_PATH: /smartscale/examples/bin   #MolecularDynamicsParameterStudy/resources
 
 " > docker-compose.yml
 
