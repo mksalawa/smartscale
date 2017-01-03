@@ -33,7 +33,7 @@ public class MetricsCollector implements Runnable {
                             .metricData(d)
                             .timestamp(DateTime.now())
                             .build();
-                        logger.info("Collector received data: {} - {}", d, taskStatus.getTimestamp().toString());
+                        logger.debug("Collector received data: {} - {}", d, taskStatus.getTimestamp().toString());
                         statusListener.receive(taskStatus);
                     }
                 );

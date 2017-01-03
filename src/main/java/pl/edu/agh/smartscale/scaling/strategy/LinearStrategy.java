@@ -41,9 +41,9 @@ public class LinearStrategy implements ScalingStrategy {
         } else if (isNewHistoricalStatus(taskStatus)) {
             command = evaluateCurrentState(previousHistoricalStatus.get(), taskStatus);
             previousHistoricalStatus = Optional.of(taskStatus);
+            logger.info("Strategy returns: {}", command.map(Object::toString).orElse("EMPTY"));
         }
 
-        logger.info("Strategy returns: {}", command.map(Object::toString).orElse("EMPTY"));
         return command;
     }
 

@@ -28,7 +28,6 @@ public class AWSCapacityEmitter implements CommandEmitter {
         int desiredCapacity = command.getDesiredConsumers();
         if (desiredCapacity != capacity) {
             setDesiredCapacity(desiredCapacity);
-            logger.info("Emitted desired capacity: {}", desiredCapacity);
         } else {
             logger.info("Skipping emitting current capacity: {}", desiredCapacity);
         }
