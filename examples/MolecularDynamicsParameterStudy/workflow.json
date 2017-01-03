@@ -2,7 +2,7 @@
   "processes": [
     {
       "name": "run-cmd-openmp-0.5",
-      "function": "command",
+      "function": "amqpCommand",
       "type": "dataflow",
       "firingLimit": 1,
       "config": {
@@ -24,7 +24,7 @@
     },
     {
       "name": "run-cmd-openmp-0.6",
-      "function": "command",
+      "function": "amqpCommand",
       "type": "dataflow",
       "firingLimit": 1,
       "config": {
@@ -46,7 +46,7 @@
     },
     {
       "name": "run-cmd-openmp-0.7",
-      "function": "command",
+      "function": "amqpCommand",
       "type": "dataflow",
       "firingLimit": 1,
       "config": {
@@ -68,7 +68,7 @@
     },
     {
       "name": "run-cmd-openmp-0.7999999999999999",
-      "function": "command",
+      "function": "amqpCommand",
       "type": "dataflow",
       "firingLimit": 1,
       "config": {
@@ -90,7 +90,7 @@
     },
     {
       "name": "run-cmd-openmp-0.8999999999999999",
-      "function": "command",
+      "function": "amqpCommand",
       "type": "dataflow",
       "firingLimit": 1,
       "config": {
@@ -112,7 +112,7 @@
     },
     {
       "name": "run-cmd-openmp-0.9999999999999999",
-      "function": "command",
+      "function": "amqpCommand",
       "type": "dataflow",
       "firingLimit": 1,
       "config": {
@@ -134,7 +134,7 @@
     },
     {
       "name": "make-movie-0.5",
-      "function": "command",
+      "function": "amqpCommand",
       "type": "dataflow",
       "firingLimit": 1,
       "config": {
@@ -155,7 +155,7 @@
     },
     {
       "name": "make-movie-0.6",
-      "function": "command",
+      "function": "amqpCommand",
       "type": "dataflow",
       "firingLimit": 1,
       "config": {
@@ -176,7 +176,7 @@
     },
     {
       "name": "make-movie-0.7",
-      "function": "command",
+      "function": "amqpCommand",
       "type": "dataflow",
       "firingLimit": 1,
       "config": {
@@ -197,7 +197,7 @@
     },
     {
       "name": "make-movie-0.7999999999999999",
-      "function": "command",
+      "function": "amqpCommand",
       "type": "dataflow",
       "firingLimit": 1,
       "config": {
@@ -218,7 +218,7 @@
     },
     {
       "name": "make-movie-0.8999999999999999",
-      "function": "command",
+      "function": "amqpCommand",
       "type": "dataflow",
       "firingLimit": 1,
       "config": {
@@ -239,7 +239,7 @@
     },
     {
       "name": "make-movie-0.9999999999999999",
-      "function": "command",
+      "function": "amqpCommand",
       "type": "dataflow",
       "firingLimit": 1,
       "config": {
