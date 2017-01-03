@@ -18,7 +18,7 @@ public class StrategyBasedStatusListener implements StatusListener {
 
     @Override
     public void receive(TaskStatus taskStatus) {
-        logger.info("Listener received status: {}", taskStatus);
+        logger.debug("Listener received status: {}", taskStatus);
         Optional<Command> command = scalingStrategy.process(taskStatus);
         command.ifPresent(c -> {
             logger.info("Listener delegating command {} to emitter.", c);
