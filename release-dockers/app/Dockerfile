@@ -13,4 +13,5 @@ ENV METRIC_COLLECTOR smartscale:9002
 
 ENV METRIC_COLLECTOR_TYPE visor
 
-CMD sleep 4 && hflow run hyperflow/examples/Montage143/workflow_decorated.json -s -p hyperflow-monitoring-plugin
+#docker exec -it hflow_app hflow run hyperflow/examples/Montage143/workflow_decorated.json -p hyperflow-monitoring-plugin
+CMD tail -f /dev/null

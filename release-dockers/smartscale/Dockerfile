@@ -10,4 +10,4 @@ WORKDIR /smartscale
 COPY . /smartscale
 
 RUN /smartscale/gradlew build
-CMD /smartscale/gradlew run
+CMD while true; do /smartscale/gradlew run; sleep 20; done
