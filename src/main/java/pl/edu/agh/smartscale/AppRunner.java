@@ -65,7 +65,7 @@ public class AppRunner {
             DateTime startDate = DateTime.now();
             NormalTimerImpl timer = new NormalTimerImpl(startDate,
                 startDate.plusMinutes(config.getTimeLeft().toStandardMinutes().getMinutes()));
-            return new LinearStrategy(timer, config.getMaxInstances());
+            return new LinearStrategy(timer, config.getMaxInstances(), config.getEvaluationFrequency());
         } else {
             throw new StrategyNotFoundException("Strategy not found.");
         }
