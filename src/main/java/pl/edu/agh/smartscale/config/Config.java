@@ -9,4 +9,5 @@ public class Config {
     Duration timeLeft;
     StrategyType strategyType;
     String groupName;
+    int maxInstances;
 }
