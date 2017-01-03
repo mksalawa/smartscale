@@ -14,7 +14,7 @@ ENV METRIC_COLLECTOR smartscale:9002
 ENV METRIC_COLLECTOR_TYPE visor
 
 COPY ./examples /smartscale/examples
-ENV PATH $PATH:$WORKDIR/resources
+ENV PATH $PATH:/smartscale/examples/bin
 
 #docker exec -it hflow_app hflow run /smartscale/examples/MolecularDynamicsParameterStudy/workflow.json -p hyperflow-monitoring-plugin
 CMD tail -f /dev/null
