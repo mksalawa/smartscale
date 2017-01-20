@@ -7,4 +7,4 @@ COPY ./examples /smartscale/examples
 RUN chmod a+x /smartscale/examples/bin
 ENV PATH $PATH:/smartscale/examples/bin
 
-CMD sleep 5 && hyperflow-amqp-executor
+CMD hyperflow-amqp-executor

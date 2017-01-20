@@ -115,4 +115,4 @@ var temperatureArray = []
 for (temperature = min_temperature; temperature <= max_temperature; temperature += step) {
   temperatureArray.push(temperature)
 }
-createWf("command", molecules, end_time, temperatureArray);
+createWf("amqpCommand", molecules, end_time, temperatureArray);

@@ -8,7 +8,7 @@ docker build -t hflow_executor:latest -f release-dockers/executor/Dockerfile .
 docker build -t smartscale:latest -f release-dockers/smartscale/Dockerfile .
 ```
 
-Ideally these images will be available on DockerHub.
+The images available on DockerHub are: marg/hflow_app, marg/hflow_executor and marg/smartscale.
 
 ## Adding executors 
 

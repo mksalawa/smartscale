@@ -29,6 +29,8 @@ public class AppRunner {
 
     private static final String AWS_PROPERTIES_FILE = "aws.properties";
     private static final String CONFIG_PROPERTIES_FILE = "config.properties";
+    private static final String ACCESS_KEY_ID = "AWS_ACCESS_KEY_ID";
+    private static final String SECRET_ACCESS_KEY = "AWS_SECRET_ACCESS_KEY";
 
     public static void main(String[] args) {
 
@@ -73,8 +75,8 @@ public class AppRunner {
 
     private static Optional<BasicAWSCredentials> getAWSCredentials() {
         logger.info("Reading credentials from environment variables.");
-        String accesskey = System.getenv("AWS_ACCESS_KEY_ID");
-        String secretkey = System.getenv("AWS_SECRET_ACCESS_KEY");
+        String accesskey = System.getenv(ACCESS_KEY_ID);
+        String secretkey = System.getenv(SECRET_ACCESS_KEY);
         if (accesskey != null && secretkey != null) {
             return Optional.of(new BasicAWSCredentials(accesskey, secretkey));
         }
@@ -82,8 +84,8 @@ public class AppRunner {
             logger.info("Reading credentials from file: {}.", AWS_PROPERTIES_FILE);
             Properties props = new Properties();
             props.load(input);
-            return Optional.of(new BasicAWSCredentials(props.getProperty("AWS_ACCESS_KEY_ID"),
-                props.getProperty("AWS_SECRET_ACCESS_KEY")));
+            return Optional.of(new BasicAWSCredentials(props.getProperty(ACCESS_KEY_ID),
+                props.getProperty(SECRET_ACCESS_KEY)));
         } catch (FileNotFoundException e) {
             logger.error("Properties file not found.", e);
         } catch (Exception e) {
