@@ -24,8 +24,9 @@ public class ConfigReader {
     private static final String STRATEGY_KEY = "STRATEGY";
     private static final String GROUP_NAME_KEY = "GROUP_NAME";
     private static final String MAX_INSTANCES_KEY = "MAX_INSTANCES";
+    private static final String EVALUATION_FREQUENCY_SEC = "EVALUATION_FREQUENCY_SEC";
     private static final ImmutableList<String> configKeys =
-        ImmutableList.of(TIME_KEY, STRATEGY_KEY, GROUP_NAME_KEY, MAX_INSTANCES_KEY);
+        ImmutableList.of(TIME_KEY, STRATEGY_KEY, GROUP_NAME_KEY, MAX_INSTANCES_KEY, EVALUATION_FREQUENCY_SEC);
     private static final ImmutableMap<String, StrategyType> strategiesMap = ImmutableMap.of("LINEAR", StrategyType.LINEAR);
 
     public static Config readProperties(String configFileName) throws ParametersNotFoundException {
@@ -60,7 +61,8 @@ public class ConfigReader {
             }
         }
         return new Config(parseTimeLeft(configValues.get(TIME_KEY)), getStrategyType(configValues.get(STRATEGY_KEY)),
-            configValues.get(GROUP_NAME_KEY), Integer.valueOf(configValues.get(MAX_INSTANCES_KEY)));
+            configValues.get(GROUP_NAME_KEY), Integer.valueOf(configValues.get(MAX_INSTANCES_KEY)),
+            Duration.standardSeconds(Long.valueOf(configValues.get(EVALUATION_FREQUENCY_SEC))));
     }
 
     private static StrategyType getStrategyType(String strategy) {

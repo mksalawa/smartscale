@@ -10,8 +10,8 @@ import pl.edu.agh.smartscale.config.Config;
 import pl.edu.agh.smartscale.config.ConfigReader;
 import pl.edu.agh.smartscale.config.NormalTimerImpl;
 import pl.edu.agh.smartscale.config.ParametersNotFoundException;
-import pl.edu.agh.smartscale.scaling.StatusListener;
 import pl.edu.agh.smartscale.metrics.MetricsCollector;
+import pl.edu.agh.smartscale.scaling.StatusListener;
 import pl.edu.agh.smartscale.scaling.StrategyBasedStatusListener;
 import pl.edu.agh.smartscale.scaling.strategy.LinearStrategy;
 import pl.edu.agh.smartscale.scaling.strategy.ScalingStrategy;
@@ -22,7 +22,6 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.Optional;
 import java.util.Properties;
-
 
 public class AppRunner {
 
@@ -66,7 +65,7 @@ public class AppRunner {
             DateTime startDate = DateTime.now();
             NormalTimerImpl timer = new NormalTimerImpl(startDate,
                 startDate.plusMinutes(config.getTimeLeft().toStandardMinutes().getMinutes()));
-            return new LinearStrategy(timer, config.getMaxInstances());
+            return new LinearStrategy(timer, config.getMaxInstances(), config.getEvaluationFrequency());
         } else {
             throw new StrategyNotFoundException("Strategy not found.");
         }

@@ -10,4 +10,5 @@ public class Config {
     StrategyType strategyType;
     String groupName;
     int maxInstances;
+    Duration evaluationFrequency;
 }
