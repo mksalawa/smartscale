@@ -1,6 +1,6 @@
-#SmartScale
+# SmartScale
 
-##Description
+## Description
 
 SmartScale is a complete system for running distributed workflow applications, 
 using [HyperFlow engine](https://github.com/balis/hyperflow) and [Amazon Web Services](https://aws.amazon.com/) platform
@@ -11,7 +11,7 @@ I consists of two major parts:
 * deployment mechanisms and configuration
 
 
-###SmartScale application
+### SmartScale application
 
 Application responsible for the autoscaling mechanisms. 
 Uses metrics collected and pushed by [HyperFlow Monitoring Plugin](https://github.com/dice-cyfronet/hyperflow-monitoring-plugin)
@@ -20,7 +20,7 @@ describing current state of the running application to come up with the scaling 
 It uses AWS API ([Java SDK](https://aws.amazon.com/sdk-for-java/)) 
 to configure and instruct the [AWS Auto Scaling](https://aws.amazon.com/autoscaling/) mechanisms.
 
-###Deployment mechanisms and configuration
+### Deployment mechanisms and configuration
 
 All necessary components have been mapped to Docker container images, available on DockerHub:
 * [HyperFlow image](https://hub.docker.com/r/marg/hflow_app)
@@ -31,10 +31,3 @@ Docker Compose is used for choreography of the services (HyperFlow + Redis + Rab
 
 During deployment, ready-made initialising scripts are used to configure the AWS objects during their creation.
 The scripts need to be adjusted to the user and application's needs.
-
-
-##Getting started
-
-Instructions for running [Molecular Dynamics Parameter Study](https://github.com/dice-cyfronet/hyperflow/tree/develop/examples/MolecularDynamicsParameterStudy) application.
-
-// TODO
